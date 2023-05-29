@@ -133,10 +133,27 @@ fun SingleReviewCard(
 }
 
 
-fun formatDate(dateString: String): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
-    val outputFormat = SimpleDateFormat("MMM, yyyy", Locale.ENGLISH)
+fun formatDate(inputDate: String): String {
+    val inputFormats = arrayOf(
+        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        "E MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)",
+        "E MMM dd yyyy HH:mm:ss 'GMT'Z",
+        "E MMM dd yyyy HH:mm:ss Z (zzzz)",
+        "E MMM dd yyyy HH:mm:ss Z"
+    )
+    val outputFormat = SimpleDateFormat("MMM, yyyy", Locale.getDefault())
 
-    val date = inputFormat.parse(dateString)
-    return outputFormat.format(date)
+    for (format in inputFormats) {
+        try {
+            val inputFormat = SimpleDateFormat(format, Locale.getDefault())
+            val date = inputFormat.parse(inputDate)
+            if (date != null) {
+                return outputFormat.format(date)
+            }
+        } catch (e: Exception) {
+            continue
+        }
+    }
+
+    return ""
 }

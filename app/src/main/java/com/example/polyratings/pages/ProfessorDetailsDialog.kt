@@ -79,10 +79,11 @@ fun ProfessorDetailsDialog(
     val uiState by viewModel.uiState.collectAsState()
     val professor: Professor? = uiState.currentProfessor;
     val fetching: Boolean = uiState.fetchingCurrentProfessor;
-    val openEvaluateDialog = remember { mutableStateOf(true) }
+    val openEvaluateDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit, block = {
-        viewModel.getProfessorDetails(id)
+        if(id.isNotEmpty())
+            viewModel.getProfessorDetails(id)
         print("Calling LaunchedEffect of ProfessorDetailsDialog !!!!")
     })
 
@@ -317,7 +318,7 @@ fun ProfHeadDetails(professor: Professor){
                             ),
                             color = Grey30
                         )
-                        RatingBar(rating = 1.6, iconModified = Modifier.size(30.dp))
+                        RatingBar(rating = professor.overallRating, iconModified = Modifier.size(30.dp))
                     }
                 }
 

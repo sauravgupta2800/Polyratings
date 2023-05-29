@@ -33,6 +33,14 @@ class PolyratingViewModel : ViewModel() {
         }
     }
 
+    fun updateCurrentProfessor(professor: Professor){
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentProfessor = professor
+            )
+        }
+    }
+
     fun getProfessorDetails(professorId: String) {
         viewModelScope.launch {
             val apiService = APIService.getInstance()
@@ -43,6 +51,7 @@ class PolyratingViewModel : ViewModel() {
             }
             try {
                 println("Before API Details: $professorId")
+//                %7B"id"%3A"2ce8c1b8-2a6b-4990-887c-96091141be93"%7D
                 val response = apiService.getProfessorDetails("%7B\"id\"%3A\"${professorId}\"%7D")
                 if (response.isSuccessful) {
                     val apiResponse: ApiResponseDetails? = response.body()

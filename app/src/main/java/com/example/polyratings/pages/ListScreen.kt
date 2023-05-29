@@ -67,14 +67,15 @@ fun ListScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val openFilterDialog = remember { mutableStateOf(false) }
-    val openProfessorDetailsDialog = remember { mutableStateOf(false) }
     val selectedSortOption: MutableState<String> = remember { mutableStateOf("relevant") }
     val selectedDeptOption: MutableState<String> = remember { mutableStateOf("All") }
     val selectedOverallRating: MutableState<Double> = remember { mutableStateOf(4.0) }
     val selectedStudentDifficulty: MutableState<Double> = remember { mutableStateOf(4.0) }
     val selectedMaterialClearly: MutableState<Double> = remember { mutableStateOf(4.0) }
     val selectedTotalRatings: MutableState<Int> = remember { mutableStateOf(300) }
-
+    //Details Dialog
+    val openProfessorDetailsDialog = remember { mutableStateOf(false) }
+    val openProfessorDetailsId = remember { mutableStateOf("") }
 
     var filteredProfessors: List<Professor> = uiState.professorList.toMutableList()
 
@@ -172,12 +173,13 @@ fun ListScreen(
         }
 
         if(openProfessorDetailsDialog.value){
-//            ProfessorDetailsDialog(
-//                onClose = {
-//
-//                    openProfessorDetailsDialog.value = false
-//                },
-//            )
+            ProfessorDetailsDialog(
+                id = openProfessorDetailsId.value,
+                onClose = {
+                    openProfessorDetailsId.value = ""
+                    openProfessorDetailsDialog.value = false
+                },
+            )
         }
 
         LazyColumn(
@@ -196,6 +198,10 @@ fun ListScreen(
                             shape = RoundedCornerShape(8.dp) // 8.dp circular edges
                         )
                         .clip(RoundedCornerShape(8.dp))
+                        .clickable {
+                            openProfessorDetailsDialog.value = true
+                            openProfessorDetailsId.value = item.id
+                        }
                 )
             }
         }

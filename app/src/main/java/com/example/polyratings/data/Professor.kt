@@ -10,7 +10,8 @@ class Professor(
     val numEvals: Int,
     val overallRating: Double,
     val studentDifficulties: Double,
-    val reviews: MutableMap<String, List<Review>>? = mutableMapOf()
+    val reviews: MutableMap<String, List<Review>>? = mutableMapOf(),
+    val tags: MutableMap<String, String>? = mutableMapOf(),
 ) {
     override fun toString(): String {
         return "Professor (courses=$courses, department='$department', firstName='$firstName', " +

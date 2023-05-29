@@ -293,24 +293,25 @@ fun FilterDialog(
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
-                    onClose()
-                },
-                modifier = Modifier.padding(0.dp),
-                elevation = ButtonDefaults.buttonElevation(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondary
-                ),
-                shape = RoundedCornerShape(4.dp)
-            ) {
-                Text(
-                    text = "Done",
-                    modifier = Modifier.padding(4.dp),
-                    fontSize = 14.sp
-                )
-            }
+
+                Button(
+                    onClick = {
+                        onClose()
+                    },
+                    modifier = Modifier.padding(0.dp),
+                    elevation = ButtonDefaults.buttonElevation(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
+                    ),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "Done",
+                        modifier = Modifier.padding(4.dp),
+                        fontSize = 14.sp
+                    )
+                }
         },
     )
 }

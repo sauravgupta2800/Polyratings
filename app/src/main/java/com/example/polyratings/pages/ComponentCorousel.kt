@@ -2,6 +2,7 @@ package com.example.polyratings.pages
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -39,9 +40,9 @@ const val AUTO_SLIDE_DURATION: Long = 4000
 @Composable
 fun ComponentCrousel(
     modifier: Modifier = Modifier,
-    professors: List<Professor> = listOf()
+    professors: List<Professor> = listOf(),
+    onCardClick: (String)->Unit
 ){
-    Text(text = "Saurav")
     Card(
         modifier = Modifier.padding(16.dp)
             .clip(shape = RoundedCornerShape(8.dp))
@@ -56,17 +57,11 @@ fun ComponentCrousel(
         AutoSlidingCarousel(
             itemsCount = 5,
             itemContent = { index ->
-//                AsyncImage(
-//                    model = ImageRequest.Builder(LocalContext.current)
-//                        .data(images[index])
-//                        .build(),
-//                    contentDescription = null,
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier.height(200.dp)
-//                )
-
                 FeaturedChip(
-                    professor = professors[index]
+                    professor = professors[index],
+                    modifier = Modifier.clickable {
+                        onCardClick(professors[index].id)
+                    }
                 )
             }
         )

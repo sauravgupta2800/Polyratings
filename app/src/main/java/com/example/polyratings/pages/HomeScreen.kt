@@ -50,8 +50,8 @@ fun HomeScreen(
 //    modifier: Modifier = Modifier,
 
 ) {
-    val openProfessorDetailsDialog = remember { mutableStateOf(true) }
-    val openProfessorDetailsId = remember { mutableStateOf("2ce8c1b8-2a6b-4990-887c-96091141be93") }
+    val openProfessorDetailsDialog = remember { mutableStateOf(false) }
+    val openProfessorDetailsId = remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
     val topProfessors = uiState.professorList
         .filter { it.numEvals > 10 }
@@ -226,8 +226,14 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
+
         ComponentCrousel(
-            professors = topProfessors.subList(1, topProfessors.size)
+            professors = topProfessors.subList(1, topProfessors.size),
+            onCardClick = {
+                openProfessorDetailsDialog.value = true
+                openProfessorDetailsId.value = it
+            }
         )
 
     }
