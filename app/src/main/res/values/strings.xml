@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Polyratings</string>
+    <string name="list">List</string>
+    <string name="about">About</string>
+    <string name="faq">FAQs</string>
+    <string name="back_button">Back</string>
+</resources>
