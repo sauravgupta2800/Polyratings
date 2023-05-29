@@ -16,14 +16,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -36,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -71,6 +79,7 @@ fun ProfessorDetailsDialog(
     val uiState by viewModel.uiState.collectAsState()
     val professor: Professor? = uiState.currentProfessor;
     val fetching: Boolean = uiState.fetchingCurrentProfessor;
+    val openEvaluateDialog = remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit, block = {
         viewModel.getProfessorDetails(id)
@@ -101,22 +110,21 @@ fun ProfessorDetailsDialog(
                     .background(GreenGrey100)) {
 
                     Column() {
+                        
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()){
-                            ProfHeadDetails()
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()) {
-                            EvaluateButton(onEvaluate = {})
+                            if (professor != null) {
+                                ProfHeadDetails(professor)
+                            }
                         }
 
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(15.dp)
+                                .padding(horizontal = 15.dp)
+                                .padding(bottom = 70.dp)
+                                .padding(top = 0.dp)
                         ) {
                             DisplayReviews(professor?.reviews?: mutableMapOf())
                         }
@@ -127,97 +135,90 @@ fun ProfessorDetailsDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(DarkGreen10)
-                            .padding(vertical = 16.dp)
+                            .padding(vertical = 12.dp)
                             .align(Alignment.BottomCenter),
                         horizontalArrangement = Arrangement.Center,
                     ) {
 
                         BottomCourses(professor?.courses ?: listOf())
                     }
+
+                    EvaluateButton(onEvaluate = {openEvaluateDialog.value = true})
+                    if(openEvaluateDialog.value)
+                        professor?.let { it1 -> EvaluateProfessorDialog(professor = it1, onClose={openEvaluateDialog.value = false}) }
+
                 }
+        }
+    }
+}
+
+@Composable
+fun EvaluateButton(
+    onEvaluate: ()-> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        // Content of the page
+
+        FloatingActionButton(
+            onClick = { onEvaluate() },
+            containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            contentColor = Color.White,
+            elevation = FloatingActionButtonDefaults.elevation(5.dp),
+            modifier = Modifier.padding(end = 0.dp, bottom = 65.dp)
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "Add")
         }
     }
 }
 
 @Composable
 fun DisplayReviews(reviewsMap: MutableMap<String, List<Review>>) {
-    LazyColumn{
+
+
+    LazyColumn {
         itemsIndexed(reviewsMap.entries.toList()){ index, entry->
             val (key, reviews) = entry
-            Box(
-                modifier = Modifier
-                    .padding(top = if(index!=0) 20.dp else 5.dp)
-                    .background(golden, shape = RoundedCornerShape(5.dp)) // Golden color
-            ) {
-                Text(
-                    text = key,
-                    color = Color.White,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                        .align(Alignment.Center)
-                )
-            }
+
 
 
             reviews.forEach { review ->
-                Row(
-                    modifier = Modifier.padding(top = 8.dp)
+                Box(
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 5.dp)
+//                        .padding(top = if(index!=0) 20.dp else 5.dp)
+                        .background(golden, shape = RoundedCornerShape(0.dp)) // Golden color
                 ) {
-                    SingleReviewCard(onFlag={})
+                    Text(
+                        text = key,
+                        color = Color.White,
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
+                            .align(Alignment.Center)
+                    )
                 }
-//                Text(text = review.rating)
+                Row(
+                    modifier = Modifier
+                        .padding()
+                        .clip(shape = RoundedCornerShape(8.dp))
+                ) {
+                    SingleReviewCard(review,onFlag={})
+                }
             }
 
         }
     }
-//    LazyRow {
-//        items(reviewsMap.entries.toList()) { entry ->
-//            val (key, reviews) = entry
-//            Text(text = key)
-//            LazyRow {
-//                items(reviews) { review ->
-//                    SingleReviewCard(onFlag={})
-//
-//                }
-//            }
-//        }
-//    }
+
 }
 
-
-@Composable
-fun EvaluateButton(
-    onEvaluate: () -> Unit,
-){
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(0.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-        Button(
-            onClick = {
-                onEvaluate()
-            },
-            modifier = Modifier.padding(0.dp),
-            elevation = ButtonDefaults.buttonElevation(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            ),
-            shape = RoundedCornerShape(4.dp)
-        ) {
-            Text(
-                text = "Evaluate Professor",
-                modifier = Modifier.padding(0.dp),
-                fontSize = 14.sp
-            )
-        }
-    }
-}
 @Composable
 fun BottomCourses(
     courses: List<String> = listOf("MTD 401","Univ 400","CSC 213", "CSC 514", "CSC 223", "CSC 414")
@@ -248,7 +249,7 @@ fun BottomCourses(
     }
 }
 @Composable
-fun ProfHeadDetails(){
+fun ProfHeadDetails(professor: Professor){
 //    val gradientBrush = Brush.horizontalGradient(
 //        colors = listOf(DarkGreen20, golden)
 //    )
@@ -264,7 +265,7 @@ fun ProfHeadDetails(){
         .padding(10.dp)) {
 
             Text(
-                text = "CHEM Prof",
+                text = "${professor.department} Prof",
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -272,7 +273,7 @@ fun ProfHeadDetails(){
                 color = Grey30
             )
             Text(
-                text = "Mahjoor, Parisa",
+                text = "${professor.lastName}, ${professor.firstName}",
                 style = TextStyle(
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold
@@ -298,7 +299,7 @@ fun ProfHeadDetails(){
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "0.64",
+                        text = "${professor.overallRating}",
                         style = TextStyle(
                             fontSize = 35.sp,
                             fontWeight = FontWeight.Bold
@@ -309,7 +310,7 @@ fun ProfHeadDetails(){
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(
-                            text = "18 Evaluation",
+                            text = "${professor.numEvals} ${if(professor.numEvals>1) "Evaluations" else "Evaluation"}",
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold
@@ -340,7 +341,7 @@ fun ProfHeadDetails(){
                         color = Grey30
                     )
 
-                    RatingBar(rating = 1.2, iconModified = Modifier.size(20.dp))
+                    RatingBar(rating = professor.studentDifficulties, iconModified = Modifier.size(20.dp))
 
                 }
                 // Presents Clearly
@@ -363,7 +364,7 @@ fun ProfHeadDetails(){
                         color = Grey30
                     )
 
-                    RatingBar(rating = 2.1, iconModified = Modifier.size(20.dp))
+                    RatingBar(rating = professor.materialClear, iconModified = Modifier.size(20.dp))
 
                 }
 

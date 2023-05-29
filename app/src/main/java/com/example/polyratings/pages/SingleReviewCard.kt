@@ -1,8 +1,11 @@
 package com.example.polyratings.pages
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,22 +33,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.polyratings.data.Review
+import com.example.polyratings.ui.theme.golden
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
 
 @Composable
 fun SingleReviewCard(
-    onFlag: ()-> Unit
+    review: Review,
+    onFlag: ()-> Unit,
+    modifer: Modifier = Modifier
 ){
     Box(
-        modifier = Modifier
+        modifier = modifer
             .fillMaxWidth()
-            .shadow(5.dp, spotColor = Color.Gray, clip = false)
+            .shadow(5.dp, spotColor = golden, clip = false)
             .background(Color.White)
-            .clip(shape = RoundedCornerShape(10.dp))
-            .padding(10.dp)
+            .clip(shape = RoundedCornerShape(8.dp))
+            .border(
+                width = 1.dp,
+                color = golden, // golden color
+                shape = RoundedCornerShape(8.dp) // 8.dp circular edges
+            )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(10.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -61,11 +80,11 @@ fun SingleReviewCard(
 
                     ) {
                         Text(
-                            text = "Grade Received: A",
+                            text = "Grade Received: ${review.grade}",
                             fontSize = 13.sp
                         )
                         Text(
-                            text = "Freshman",
+                            text = "${review.gradeLevel}",
                             fontSize = 13.sp,
                             modifier = Modifier.padding(start=20.dp))
                     }
@@ -85,27 +104,18 @@ fun SingleReviewCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Mar 2014",
+                    text = formatDate(review.postDate),
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
                 )
 
-//                IconButton(
-//                    onClick = { onFlag },
-//                    modifier = Modifier.padding(0.dp),
-//                ) {
-//                    Icon(
-//                        Icons.Outlined.Delete,
-//                        contentDescription = "Dropdown Arrow",
-//                        tint = Color.Gray,
-//                        modifier = Modifier.size(24.dp)
-//                    )
-//                }
                 Icon(
-                    Icons.Outlined.Delete,
+                    Icons.Outlined.Warning,
                     contentDescription = "Dropdown Arrow",
                     tint = Color.Gray,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp).clickable {
+                        onFlag()
+                    }
                 )
             }
 
@@ -114,10 +124,19 @@ fun SingleReviewCard(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "A subject matter very clearly but if you took chemistry in high school you'll be fine. A Super Easy teacher. She doesn't teach the subject matter very clearly but if you took chemistry in high school you'll be fine.",
+                    text = "${review.rating}",
                     fontSize = 14.sp,
                 )
             }
         }
     }
+}
+
+
+fun formatDate(dateString: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
+    val outputFormat = SimpleDateFormat("MMM, yyyy", Locale.ENGLISH)
+
+    val date = inputFormat.parse(dateString)
+    return outputFormat.format(date)
 }

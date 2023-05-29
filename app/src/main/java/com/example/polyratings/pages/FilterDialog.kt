@@ -21,6 +21,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.polyratings.data.PolyratingViewModel
 import com.example.polyratings.data.SortItem
+import com.example.polyratings.ui.theme.golden
 
 @Composable
 fun FilterDialog(
@@ -184,7 +186,12 @@ fun FilterDialog(
                         onValueChange = { newValue -> onOverallRatingChange(String.format("%.1f", newValue).toDouble()) },
                         valueRange = 0f..4f,
                         steps = 40,
-                        modifier = Modifier.fillMaxWidth(0.8f)
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = golden,
+                            activeTrackColor = golden,
+                            inactiveTrackColor = golden.copy(alpha = 0.3f)
+                        ),
                     )
                     Text(
                         text = selectedOverallRating.toString(),
@@ -209,7 +216,12 @@ fun FilterDialog(
                         onValueChange = { newValue -> onMaterialClearlyChange(String.format("%.1f", newValue).toDouble()) },
                         valueRange = 0f..4f,
                         steps = 40,
-                        modifier = Modifier.fillMaxWidth(0.8f)
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = golden,
+                            activeTrackColor = golden,
+                            inactiveTrackColor = golden.copy(alpha = 0.3f)
+                        ),
                     )
                     Text(
                         text = selectedMaterialClearly.toString(),
@@ -234,7 +246,12 @@ fun FilterDialog(
                         onValueChange = { newValue -> onStudentdifficultyChange(String.format("%.1f", newValue).toDouble()) },
                         valueRange = 0f..4f,
                         steps = 40,
-                        modifier = Modifier.fillMaxWidth(0.8f)
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = golden,
+                            activeTrackColor = golden,
+                            inactiveTrackColor = golden.copy(alpha = 0.3f)
+                        ),
                     )
                     Text(
                         text = selectedStudentDifficulty.toString(),
@@ -256,10 +273,15 @@ fun FilterDialog(
                 ) {
                     Slider(
                         value = selectedTotalRatings.toFloat(),
-                        onValueChange = { newValue -> onTotalRatingsChange(newValue.toInt()) },
+                        onValueChange = { newValue -> onTotalRatingsChange(((newValue.toInt()/10)*10)) },
                         valueRange = 0f..300f,
-                        steps = 300,
-                        modifier = Modifier.fillMaxWidth(0.8f)
+                        steps = 30,
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = golden,
+                            activeTrackColor = golden,
+                            inactiveTrackColor = golden.copy(alpha = 0.3f)
+                        ),
                     )
                     Text(
                         text = selectedTotalRatings.toString(),
@@ -271,12 +293,6 @@ fun FilterDialog(
             }
         },
         confirmButton = {
-//            TextButton(
-//
-//            ) {
-//                Text("Done", color = Color.Black)
-//            }
-
             Button(
                 onClick = {
                     onClose()
