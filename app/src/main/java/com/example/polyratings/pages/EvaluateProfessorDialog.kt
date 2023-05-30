@@ -77,6 +77,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.polyratings.ui.theme.DarkGreen10
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -242,7 +243,7 @@ fun EvaluateProfessorDialog(
                             CustomSlider(
                                 value = overallRating.value,
                                 onChange = { overallRating.value = it },
-                                label = "Reason for Taking",
+                                label = "Overall Rating",
                             )
                         }
                         Row(
@@ -332,9 +333,11 @@ fun EvaluateProfessorDialog(
                                         println("AFTER POST DATA:")
                                         println(professor)
                                         viewModel.updateCurrentProfessor(professor)
-//                                    Toast.makeText(context, "Thank you for your rating", Toast.LENGTH_SHORT).show()
                                         isLoading.value = false
-                                        onClose()
+                                        withContext(Dispatchers.Main) {
+                                           Toast.makeText(context, "Thank you for your rating", Toast.LENGTH_LONG).show()
+                                            onClose()
+                                        }
                                     } else {
                                         println(response)
                                     }
@@ -430,7 +433,8 @@ fun DropdownComponent(
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Grey90,
                             textColor = Color.Gray
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 else
                     TextField(
@@ -438,7 +442,7 @@ fun DropdownComponent(
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
-                        modifier = Modifier.menuAnchor(),
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Grey99,
                             textColor = Color.Black
@@ -553,6 +557,7 @@ fun CustomText(
                         containerColor = Grey99,
                         textColor = Color.Black
                     ),
+                modifier = Modifier.fillMaxWidth(),
                 maxLines = maxLines,
                 keyboardOptions = KeyboardOptions(keyboardType=keyboardType)
 

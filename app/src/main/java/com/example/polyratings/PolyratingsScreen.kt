@@ -1,10 +1,12 @@
 package com.example.polyratings
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
@@ -14,6 +16,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
@@ -32,8 +35,9 @@ import com.example.polyratings.pages.*
 enum class PolyratingScreen(@StringRes val title: Int) {
     Home(title = R.string.app_name),
     List(title = R.string.list),
+    Add(title = R.string.add),
     About(title = R.string.about),
-    FAQ(title = R.string.faq)
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +57,7 @@ fun PolyratingsApp(
     val currentScreen = PolyratingScreen.valueOf(
         backStackEntry?.destination?.route ?: PolyratingScreen.Home.name
     )
+    val context = LocalContext.current
 
     var selectedItem = remember { mutableStateOf(0) }
 
@@ -70,17 +75,18 @@ fun PolyratingsApp(
             navigateTo = PolyratingScreen.List.name,
         ),
         BottomNavItem(
+            name = "Add",
+            route = "add",
+            icon = Icons.Rounded.Add,
+            navigateTo = PolyratingScreen.Add.name,
+        ),
+        BottomNavItem(
             name = "About",
             route = "about",
             icon = Icons.Rounded.Info,
             navigateTo = PolyratingScreen.About.name,
         ),
-        BottomNavItem(
-            name = "FAQ",
-            route = "faq",
-            icon = Icons.Rounded.Build,
-            navigateTo = PolyratingScreen.FAQ.name,
-        ),
+
     )
 
     Scaffold(
@@ -140,12 +146,18 @@ fun PolyratingsApp(
                 composable(route = PolyratingScreen.List.name) {
                     ListScreen(viewModel)
                 }
+                composable(route = PolyratingScreen.Add.name) {
+                    AddScreen(onSuccess = {
+                        println("onSuccess Called")
+                        selectedItem.value = 1
+                        navController.navigate(PolyratingScreen.List.name)
+                        Toast.makeText(context, "Thank you for adding a professor. It will be reviewed manually and will be available soon.", Toast.LENGTH_LONG).show()
+                    })
+                }
                 composable(route = PolyratingScreen.About.name) {
                     AboutScreen()
                 }
-                composable(route = PolyratingScreen.FAQ.name) {
-                    FAQScreen()
-                }
+
             }
         }
     }
@@ -177,17 +189,6 @@ fun PolyratingAppBar(
             }
         },
         modifier = modifier,
-
-        navigationIcon = {
-            if (false && canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
-            }
-        },
 
     )
 }

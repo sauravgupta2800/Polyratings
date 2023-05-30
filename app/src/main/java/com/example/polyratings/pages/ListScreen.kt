@@ -98,12 +98,18 @@ fun ListScreen(
                 professor.numEvals <= selectedTotalRatings.value
     }
 
+    val query = uiState.searchKey.trim().lowercase()
+    filteredProfessors = filteredProfessors.filter { professor ->
+        professor.firstName.lowercase().contains(query) ||
+                professor.lastName.lowercase().contains(query)
+    }
+
+
 
     Column(modifier = Modifier
         .fillMaxSize()
         .background(GreenGrey100)) {
 
-//        Text(text = "${selectedTotalRatings.value}")
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically

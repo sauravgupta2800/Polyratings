@@ -53,3 +53,4 @@ val GreenGrey90 = Color(0xFFdcefe4)
 val GreenGrey100 = Color(0xFFEEF1F0)
 
 val golden = Color(0xFFDAA520)
+val goldenlight = Color(0xFFF8EDD2)

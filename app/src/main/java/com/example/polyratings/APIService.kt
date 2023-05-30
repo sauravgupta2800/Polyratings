@@ -1,5 +1,6 @@
 package com.example.polyratings
 
+import com.example.polyratings.data.AddProfessorFormState
 import com.example.polyratings.data.EvaluateProfessorFormState
 import com.example.polyratings.data.Professor
 import retrofit2.Call
@@ -25,6 +26,9 @@ interface APIService {
 
     @POST("ratings.add")
     suspend fun addRating(@Body payload: EvaluateProfessorFormState): Response<ApiResponseDetails>
+
+    @POST("professors.add")
+    suspend fun addProfessor(@Body payload: AddProfessorFormState): Response<Any>
 
     companion object {
         var apiService: APIService? = null

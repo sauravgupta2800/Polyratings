@@ -1,5 +1,6 @@
 package com.example.polyratings.pages
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +31,8 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -220,7 +223,7 @@ fun HomeScreen(
                     .clickable {
                         openProfessorDetailsDialog.value = true
                         openProfessorDetailsId.value = topProfessors[0].id
-                     },
+                    },
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -262,12 +265,20 @@ fun FeaturedChip(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "${professor.lastName}, ${professor.firstName}",
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(10.dp)
-            )
+            Row(
+                modifier = Modifier.padding(start = 10.dp)
+            ) {
+                CircularAvatarPlaceholder(
+                    initials = "${professor.firstName[0]}",
+                    size=32.dp
+                )
+                Text(
+                    text = "${professor.lastName}, ${professor.firstName}",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End,
@@ -323,4 +334,55 @@ fun FeaturedChip(
             }
         }
     }
+}
+
+
+@Composable
+fun CircularAvatarPlaceholder(
+    initials: String,
+    size: Dp,
+    textColor: Color = Color.White
+) {
+    val backgroundColor = getBackgroundColor(initials)
+
+    Box(
+        modifier = Modifier
+            .size(size)
+            .border(
+                BorderStroke(0.4.dp, backgroundColor),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .clip(shape = RoundedCornerShape(6.dp))
+            .background(backgroundColor, shape = MaterialTheme.shapes.medium)
+    ) {
+        Text(
+            text = initials,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(backgroundColor, textColor),
+                        startY = 0f,
+                        endY = 100f
+                    )
+                ),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleLarge,
+            color = textColor
+        )
+    }
+}
+
+private fun getBackgroundColor(initials: String): Color {
+    val colors = listOf(
+        Color(0xFFE7655A),
+        Color(0xFFF4B400),
+        Color(0xFF23CC7A),
+        Color(0xFFE76B44),
+        Color(0xFF53D1CD),
+        Color(0xFFE974C2)
+    )
+
+    val index = (initials.hashCode() % colors.size + colors.size) % colors.size
+    return colors[index]
 }

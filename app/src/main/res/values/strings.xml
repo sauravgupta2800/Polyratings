@@ -3,5 +3,6 @@
     <string name="list">List</string>
     <string name="about">About</string>
     <string name="faq">FAQs</string>
+    <string name="add">Add Professor</string>
     <string name="back_button">Back</string>
 </resources>
