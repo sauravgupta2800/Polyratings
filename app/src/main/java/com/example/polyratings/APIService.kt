@@ -3,6 +3,7 @@ package com.example.polyratings
 import com.example.polyratings.data.AddProfessorFormState
 import com.example.polyratings.data.EvaluateProfessorFormState
 import com.example.polyratings.data.Professor
+import com.example.polyratings.data.ReportRating
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -29,6 +30,10 @@ interface APIService {
 
     @POST("professors.add")
     suspend fun addProfessor(@Body payload: AddProfessorFormState): Response<Any>
+
+    @POST("ratings.report")
+    suspend fun ratingsReport(@Body payload: ReportRating): Response<Any>
+
 
     companion object {
         var apiService: APIService? = null

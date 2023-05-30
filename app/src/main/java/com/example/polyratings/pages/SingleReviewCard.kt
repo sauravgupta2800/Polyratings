@@ -25,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +46,18 @@ import java.util.Locale
 @Composable
 fun SingleReviewCard(
     review: Review,
-    onFlag: ()-> Unit,
+    professorId: String,
     modifer: Modifier = Modifier
 ){
+    val showReportDialog = remember { mutableStateOf(false) }
+
+    if(showReportDialog.value){
+        ReportReviewDialog(
+            ratingId = review.id,
+            professorId = professorId,
+            onClose = { showReportDialog.value = false }
+        )
+    }
     Box(
         modifier = modifer
             .fillMaxWidth()
@@ -114,7 +125,7 @@ fun SingleReviewCard(
                     contentDescription = "Dropdown Arrow",
                     tint = Color.Gray,
                     modifier = Modifier.size(20.dp).clickable {
-                        onFlag()
+                        showReportDialog.value = true
                     }
                 )
             }

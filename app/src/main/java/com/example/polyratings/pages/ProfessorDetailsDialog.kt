@@ -127,7 +127,7 @@ fun ProfessorDetailsDialog(
                                 .padding(bottom = 70.dp)
                                 .padding(top = 0.dp)
                         ) {
-                            DisplayReviews(professor?.reviews?: mutableMapOf())
+                            DisplayReviews(professor?.reviews?: mutableMapOf(), professor?.id?:"")
                         }
                     }
 
@@ -178,7 +178,7 @@ fun EvaluateButton(
 }
 
 @Composable
-fun DisplayReviews(reviewsMap: MutableMap<String, List<Review>>) {
+fun DisplayReviews(reviewsMap: MutableMap<String, List<Review>>, professorId:String) {
 
 
     LazyColumn {
@@ -211,7 +211,7 @@ fun DisplayReviews(reviewsMap: MutableMap<String, List<Review>>) {
                         .padding()
                         .clip(shape = RoundedCornerShape(8.dp))
                 ) {
-                    SingleReviewCard(review,onFlag={})
+                    SingleReviewCard(review,professorId)
                 }
             }
 
