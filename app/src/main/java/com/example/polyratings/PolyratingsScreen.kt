@@ -36,7 +36,7 @@ enum class PolyratingScreen(@StringRes val title: Int) {
     Home(title = R.string.app_name),
     List(title = R.string.list),
     Add(title = R.string.add),
-    About(title = R.string.about),
+    FAQ(title = R.string.faq),
 
 }
 
@@ -81,10 +81,10 @@ fun PolyratingsApp(
             navigateTo = PolyratingScreen.Add.name,
         ),
         BottomNavItem(
-            name = "About",
-            route = "about",
+            name = "FAQs",
+            route = "faq",
             icon = Icons.Rounded.Info,
-            navigateTo = PolyratingScreen.About.name,
+            navigateTo = PolyratingScreen.FAQ.name,
         ),
 
     )
@@ -154,8 +154,8 @@ fun PolyratingsApp(
                         Toast.makeText(context, "Thank you for adding a professor. It will be reviewed manually and will be available soon.", Toast.LENGTH_LONG).show()
                     })
                 }
-                composable(route = PolyratingScreen.About.name) {
-                    AboutScreen()
+                composable(route = PolyratingScreen.FAQ.name) {
+                    FaqScreen()
                 }
 
             }
