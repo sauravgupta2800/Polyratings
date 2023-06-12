@@ -144,7 +144,13 @@ fun PolyratingsApp(
                         )
                 }
                 composable(route = PolyratingScreen.List.name) {
-                    ListScreen(viewModel)
+                    ListScreen(
+                        viewModel,
+                        onAddProf = {
+                            selectedItem.value = 2
+                            navController.navigate(PolyratingScreen.Add.name)
+                        }
+                    )
                 }
                 composable(route = PolyratingScreen.Add.name) {
                     AddScreen(onSuccess = {

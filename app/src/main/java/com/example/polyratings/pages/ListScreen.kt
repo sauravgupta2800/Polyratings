@@ -54,6 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.polyratings.data.PolyratingViewModel
 import com.example.polyratings.data.Professor
 import com.example.polyratings.data.SortItem
+import com.example.polyratings.ui.theme.DarkGreen10
 import com.example.polyratings.ui.theme.DarkGreen20
 import com.example.polyratings.ui.theme.GreenGrey100
 import com.example.polyratings.ui.theme.GreenGrey90
@@ -63,6 +64,7 @@ import com.example.polyratings.ui.theme.golden
 @Composable
 fun ListScreen(
     viewModel: PolyratingViewModel = viewModel(),
+    onAddProf: () -> Unit
 ){
 
     val uiState by viewModel.uiState.collectAsState()
@@ -187,6 +189,30 @@ fun ListScreen(
                 },
             )
         }
+
+        if(filteredProfessors.isEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+                    Text(text = "No Results Found.")
+                    Text(
+                        text = "Add a Professor?",
+                        color = DarkGreen10,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                            .padding(top = 15.dp)
+                            .clickable(onClick = onAddProf),
+                    )
+                }
+            }
+        }
+        
 
         LazyColumn(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
